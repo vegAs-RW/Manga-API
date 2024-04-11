@@ -1,0 +1,27 @@
+[
+  {
+    "id": "1",
+    "username": "Patrick",
+    "password": "password1"
+  },
+  {
+    "id": "2",
+    "username": "Louis",
+    "password": "password2"
+  },
+  {
+    "id": "3",
+    "username": "Kévin",
+    "password": "password3"
+  },
+  {
+    "username": "Kévin12",
+    "password": "$2b$12$32.wt9TYRSazF4QBUqhw0.rmLX/jDw30eA4d/w6VvGsrBY1v1uj4i",
+    "id": "57c56774-d0d7-4ad1-80a0-377cf71f0825"
+  },
+  {
+    "username": "Kévin123",
+    "password": "$2b$12$Zwx9kN3GS1V95U.KMEALRO..zPFGvsna4W2/.3edXXZgZHlza3g5W",
+    "id": "1258a4f6-b387-4bf3-a21f-9a1452dba4f3"
+  }
+]
