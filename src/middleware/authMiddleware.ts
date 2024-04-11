@@ -1,28 +1,40 @@
 import { Request, Response, NextFunction } from "express";
+// Importe la fonction de réponse API
 import { APIResponse } from "../utils/APIresponse";
 import jwt from 'jsonwebtoken'
+ // Importe la configuration de l'environnement
 import env from "../config/env"
 
+// Récupère la clé secrète JWT de l'environnement
 const {JWT_SECRET}= env
 
+/**
+ * Middleware pour vérifier l'authentification de l'utilisateur à l'aide de JWT.
+ * @param req - L'objet Request d'Express.
+ * @param res - L'objet Response d'Express.
+ * @param next - La fonction pour passer au middleware suivant.
+ */
 export const isAuth = (req: Request, res: Response, next: NextFunction) => {
+    // Récupère le token d'accès depuis les cookies de la requête
     const {accessToken} = req.cookies
+    // Si aucun token d'accès n'est présent, renvoie une réponse d'erreur avec le statut 403
     if (!accessToken) {
         return APIResponse(res, {statusCode: 403, message: 'Missing token'})
     }
     try {
-        // On decode le jwt dans le cookie 'accesstoken' avec notrez secret
+        // Décode le token d'accès avec la clé secrète JWT
         const decoded = jwt.verify(accessToken, JWT_SECRET);
         const {id, name} = decoded as jwt.JwtPayload;
 
         // On ajoute le payload dans la propriété req pour l'utiliser dans les routes
         //req.user = {id, name}
+        // Ajoute les informations de l'utilisateur dans la propriété req pour une utilisation ultérieure
         req.push({user: {id, name}})
       
-        // On passe au controller suivant ou au mw suivant
+        // Passe au middleware suivant ou au contrôleur suivant
         next()
     } catch(err) {
-        // Jwt invalide, user pas autorisé à acceder a la ressource
+        // En cas d'erreur de décodage du token ou de token invalide, renvoie une réponse d'erreur avec le statut 401
         return APIResponse(res, {statusCode: 401, message: 'Unauthorized'})
     }
 }

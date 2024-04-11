@@ -2,24 +2,36 @@ import { User } from '../../domain/entities/User';
 import fs from 'fs';
 import path from 'path';
 
-
+/**
+ * Classe représentant un repository pour gérer les opérations CRUD sur les utilisateurs.
+ */
 export class UserRepository {
-    
+    /** Chemin du fichier JSON contenant les données des utilisateurs */
     private filePath = path.join(__dirname, '..', 'data', 'users.json');
 
-    // Méthode pour obtenir tous les utilisateurs
+    /**
+     * Récupère tous les utilisateurs à partir du fichier JSON.
+     * @returns Un tableau contenant tous les utilisateurs.
+     */
     getAllUsers(): User[] {
         const data = fs.readFileSync(this.filePath, 'utf-8');
         return JSON.parse(data);
     }
 
-    // Méthode pour obtenir un utilisateur par son ID
-    getUserByUsername(username: string): User| undefined {
+    /**
+     * Récupère un utilisateur par son nom d'utilisateur.
+     * @param username - Le nom d'utilisateur de l'utilisateur à récupérer.
+     * @returns L'utilisateur correspondant au nom d'utilisateur spécifié, ou undefined s'il n'existe pas.
+     */
+    getUserByUsername(username: string): User | undefined {
         const users = this.getAllUsers();
         return users.find(user => user.username === username);
     }
 
-    // Méthode pour ajouter un nouvel utilisateur
+    /**
+     * Ajoute un nouvel utilisateur.
+     * @param user - L'utilisateur à ajouter.
+     */
     addUser(user: User) {
         const users = this.getAllUsers();
         users.push({
@@ -29,7 +41,10 @@ export class UserRepository {
         this.saveUsers(users);
     }
 
-    // Méthode pour mettre à jour un utilisateur existant
+    /**
+     * Met à jour un utilisateur existant.
+     * @param updatedUser - L'utilisateur mis à jour.
+     */
     updateUser(updatedUser: User): void {
         const users = this.getAllUsers();
         const index = users.findIndex(user => user.id === updatedUser.id);
@@ -39,17 +54,21 @@ export class UserRepository {
         }
     }
 
-    // Méthode pour supprimer un utilisateur par son ID
+    /**
+     * Supprime un utilisateur par son ID.
+     * @param id - L'identifiant de l'utilisateur à supprimer.
+     */
     deleteUser(id: string): void {
         const users = this.getAllUsers().filter(user => user.id !== id);
         this.saveUsers(users);
     }
 
-    // Méthode pour enregistrer les utilisateurs dans le fichier JSON
+    /**
+     * Enregistre les utilisateurs dans le fichier JSON.
+     * @param users - Le tableau des utilisateurs à enregistrer.
+     */
     private saveUsers(users: User[]): void {
         const data = JSON.stringify(users, null, 2);
         fs.writeFileSync(this.filePath, data);
     }
-
-
 }

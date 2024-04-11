@@ -1,40 +1,59 @@
 import jwt from "jsonwebtoken";
-import { User } from "../entities/User";
 import env from "../../config/env";
 
-const {JWT_SECRET, REFRESH_TOKEN} = env
+// Récupération des clés secrètes JWT depuis les variables d'environnement
+
+const { JWT_SECRET, REFRESH_TOKEN } = env
 
 export class AuthService {
+    // Map pour stocker les jetons de rafraîchissement associés à l'ID de l'utilisateur
     private refreshTokenStore: Map<string, string> = new Map();
 
-    createAccessToken(id: string) : string {
-        return jwt.sign({userId: id}, JWT_SECRET, {expiresIn: '15m'});
+    /**
+     * Crée un jeton d'accès JWT avec l'ID de l'utilisateur comme payload
+     * @param id Identifiant de l'utilisateur
+     * @returns Jeton d'accès JWT
+     */
+    createAccessToken(id: string): string {
+        return jwt.sign({ userId: id }, JWT_SECRET, { expiresIn: '15m' });
     }
 
-    createRefreshToken(id: string) : string {
-        const refreshToken = jwt.sign({userId: id}, REFRESH_TOKEN, {expiresIn: '5d'});
+    /**
+     * Crée un jeton de rafraîchissement JWT avec l'ID de l'utilisateur comme payload
+     * et le stocke dans le refreshTokenStore
+     * @param id Identifiant de l'utilisateur
+     * @returns Jeton de rafraîchissement JWT
+     */
+    createRefreshToken(id: string): string {
+        const refreshToken = jwt.sign({ userId: id }, REFRESH_TOKEN, { expiresIn: '5d' });
         this.refreshTokenStore.set(id, refreshToken)
-
         return refreshToken
     }
 
+    /**
+     * Rafraîchit un jeton d'accès JWT en utilisant un jeton de rafraîchissement JWT valide
+     * @param refreshToken Jeton de rafraîchissement JWT
+     * @returns Nouveau jeton d'accès JWT ou undefined si le rafraîchissement échoue
+     */
     refreshAccessToken(refreshToken: string): string | void {
         try {
-            // On vérifie que le token en paramètre est bien valide
+            // Vérifie que le jeton de rafraîchissement est valide et récupère le payload
             const payload = jwt.verify(refreshToken, REFRESH_TOKEN) as jwt.JwtPayload;
-            // On récupére ce même token dans notre store
+            // Récupère le jeton de rafraîchissement associé à l'ID de l'utilisateur dans le store
             const storedRefreshToken = this.refreshTokenStore.get(payload.userId)
-            // Si ce token existe dans le store, ca implique qu'il est valide.
-            if ( storedRefreshToken === refreshToken) {
-                // On génère un nouveau token de rafraichissement
+            // Vérifie que le jeton de rafraîchissement fourni correspond à celui stocké
+            if (storedRefreshToken === refreshToken) {
+                // Génère un nouveau jeton d'accès
                 const newToken = this.createAccessToken(payload.userId)
-                // On enregistre le nouveau token de rafraichissement
+                // Met à jour le jeton de rafraîchissement dans le store
                 this.refreshTokenStore.set(payload.userId, newToken)
             } else {
-               throw new Error('Invalid refresh token') 
+                // Jeton de rafraîchissement invalide
+                throw new Error('Invalid refresh token')
             }
         } catch {
-            throw new Error('Invalid refresh token') 
+            // Jeton de rafraîchissement invalide
+            throw new Error('Invalid refresh token')
         }
     }
 }

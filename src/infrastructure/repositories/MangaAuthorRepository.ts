@@ -6,19 +6,21 @@ import path from 'path';
  * Repository qui gère le CRUD des auteurs
  */
 export class MangaAuthorRepository {
-    private filePath = path.join(__dirname, '..', 'data', 'categories.json');
+    private filePath = path.join(__dirname, '..', 'data', 'auteur.json');
 
     /**
      * Récupère tous les auteurs du fichier json
-     * @returns {MangaAuthor[]}
+     * @returns {MangaAuthor[]} Un tableau contenant tous les auteurs de manga
      */
     getAllAuthors(): MangaAuthor[] {
         const data = fs.readFileSync(this.filePath, 'utf-8')
         return JSON.parse(data)
     }
+
     /**
-     * @param {string} mangaId - identifiants du manga ou retrouver l'auteur
-     * @return {MangaAuthor[]}
+     * Récupère les auteurs d'un manga en fonction de l'identifiant du manga
+     * @param {string} mangaId L'identifiant du manga
+     * @return {MangaAuthor[]} Un tableau contenant les auteurs du manga donné
      */
     getAuthorByMangaId(mangaId: string): MangaAuthor[] {
         const authors = this.getAllAuthors();
@@ -26,8 +28,8 @@ export class MangaAuthorRepository {
     }
 
     /**
-     * 
-     * @param {MangaAuthors[]} - tableau des auteurs 
+     * Enregistre les auteurs de manga dans le fichier JSON
+     * @param {MangaAuthors[]} authors Les auteurs de manga à enregistrer
      */
     saveAuthors(authors: MangaAuthor[]) {
         const data = JSON.stringify(authors);

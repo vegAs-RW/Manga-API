@@ -6,33 +6,52 @@ export class MangaService {
     private mangasRepository: MangasRepository;
     private mangaAuthorRepository: MangaAuthorRepository;
 
-    constructor(){
+    // Constructeur pour initialiser les repositories
+    constructor() {
         this.mangasRepository = new MangasRepository();
         this.mangaAuthorRepository = new MangaAuthorRepository();
     }
 
+    /**
+     * Récupère tous les mangas avec leurs auteurs associés
+     * @returns Un tableau de mangas avec les auteurs
+     */
     getAllMangas(): Manga[] {
+        // Récupère tous les mangas depuis le repository
         const mangas = this.mangasRepository.getAllMangas();
+        // Boucle à travers chaque manga pour récupérer son auteur
         for (const manga of mangas) {
-            if(manga.id) {
+            // Vérifie si l'identifiant du manga est défini
+            if (manga.id) {
+                // Récupère l'auteur du manga en fonction de son identifiant
                 manga.author = this.mangaAuthorRepository.getAuthorByMangaId(manga.id) || []
             }
         }
         return mangas
     }
 
-    getMangaById(id: string ): Manga | undefined {
+    /**
+     * Récupère un manga par son identifiant
+     * @param id L'identifiant du manga à récupérer
+     * @returns Le manga correspondant à l'identifiant ou undefined s'il n'existe pas
+     */
+    getMangaById(id: string): Manga | undefined {
         return this.mangasRepository.getMangaById(id)
     }
 
+    /**
+     * Ajoute un nouveau manga
+     * @param manga Le manga à ajouter
+     */
     addManga(manga: Manga) {
+        // Récupère tous les mangas existants
         const mangas = this.mangasRepository.getAllMangas();
-
+        // Ajoute le nouveau manga avec son identifiant unique
         mangas.push({
             id: crypto.randomUUID(),
             ...manga
         })
-        // On sauvegarde les posts
+        // Sauvegarde les mangas mis à jour
         this.mangasRepository.addNewManga(mangas);
     }
 }
