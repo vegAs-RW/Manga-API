@@ -11,10 +11,10 @@ const authorRepository = new MangaAuthorRepository();
  */
 export const getCommentsByPostId = (req: Request, res: Response) => {
     const {id} = req.params
-    const comments = authorRepository.getAuthorByMangaId(id)
+    const author = authorRepository.getAuthorByMangaId(id)
     APIResponse(res, {
         statusCode: 200,
         message: "Ok",
-        data: comments
+        data: author
     })
 }
