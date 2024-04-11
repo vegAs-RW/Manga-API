@@ -1,4 +1,4 @@
-import { Request, Response, response } from "express";
+import { Request, Response } from "express";
 import { MangaService } from "../../../domain/services/MangaService";
 import {APIResponse} from '../../../utils/APIresponse';
 
@@ -14,7 +14,8 @@ export const getAllMangas = async (req: Request, res: Response) => {
 }
 
 export const getMangaById = (req: Request, res: Response) => {
-    const mangaId = parseInt(req.params.id);
+    const mangaId = req.params.id;
+    console.log(mangaId)
     const manga = mangaService.getMangaById(mangaId);
     if (!manga) {
         APIResponse(res, {

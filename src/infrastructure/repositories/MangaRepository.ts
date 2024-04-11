@@ -7,6 +7,7 @@ export class MangasRepository {
 
     private filePath = path.join(__dirname, '..', 'data', 'manga.json');
 
+    
     constructor() {
         this.mangas = this.loadMangas();
     }
@@ -21,7 +22,12 @@ export class MangasRepository {
         return JSON.parse(data);
     }
 
-    getMangaById(id: number) {
+    getMangaById(id: string) {
         return this.mangas.find(manga => manga.id === id)
     } 
+
+    addNewManga(manga: Manga[]) {
+        const data = JSON.stringify(manga)
+        fs.writeFileSync(this.filePath, data)
+    }
 }
