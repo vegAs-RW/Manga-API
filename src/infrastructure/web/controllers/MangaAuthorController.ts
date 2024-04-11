@@ -9,7 +9,7 @@ const authorRepository = new MangaAuthorRepository();
  * @param req - requete http gérée via express
  * @param res - réponse http gérée par express
  */
-export const getCommentsByPostId = (req: Request, res: Response) => {
+export const getAuthorByMangaId = (req: Request, res: Response) => {
     const {id} = req.params
     const author = authorRepository.getAuthorByMangaId(id)
     APIResponse(res, {
