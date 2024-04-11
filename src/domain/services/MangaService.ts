@@ -1,17 +1,24 @@
 import { Manga } from "../entities/Manga";
 import { MangasRepository } from "../../infrastructure/repositories/MangaRepository";
-
+import { MangaAuthorRepository } from "../../infrastructure/repositories/MangaAuthorRepository";
 
 export class MangaService {
     private mangasRepository: MangasRepository;
-
+    private mangaAuthorRepository: MangaAuthorRepository;
 
     constructor(){
         this.mangasRepository = new MangasRepository();
+        this.mangaAuthorRepository = new MangaAuthorRepository();
     }
 
     getAllMangas(): Manga[] {
-        return this.mangasRepository.getAllMangas();
+        const mangas = this.mangasRepository.getAllMangas();
+        for (const manga of mangas) {
+            if(manga.id) {
+                manga.author = this.mangaAuthorRepository.getAuthorByMangaId(manga.id) || []
+            }
+        }
+        return mangas
     }
 
     getMangaById(id: string ): Manga | undefined {
