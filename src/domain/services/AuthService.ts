@@ -1,4 +1,4 @@
-import jwt, { JwtPayload } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import env from "../../config/env";
 
 // Récupération des clés secrètes JWT depuis les variables d'environnement
@@ -15,7 +15,7 @@ export class AuthService {
      * @returns Jeton d'accès JWT
      */
     createAccessToken(id: string): string {
-        return jwt.sign({ userId: id }, JWT_SECRET, { expiresIn: '5m' });
+        return jwt.sign({ userId: id }, JWT_SECRET, { expiresIn: '20m' });
     }
 
     /**
