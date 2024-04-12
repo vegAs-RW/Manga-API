@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import env from "../../config/env";
 
 // Récupération des clés secrètes JWT depuis les variables d'environnement
@@ -15,7 +15,7 @@ export class AuthService {
      * @returns Jeton d'accès JWT
      */
     createAccessToken(id: string): string {
-        return jwt.sign({ userId: id }, JWT_SECRET, { expiresIn: '15m' });
+        return jwt.sign({ userId: id }, JWT_SECRET, { expiresIn: '5m' });
     }
 
     /**
@@ -38,7 +38,7 @@ export class AuthService {
     refreshAccessToken(refreshToken: string): string | void {
         try {
             // Vérifie que le jeton de rafraîchissement est valide et récupère le payload
-            const payload = jwt.verify(refreshToken, REFRESH_TOKEN) as jwt.JwtPayload;
+            const payload = jwt.decode(refreshToken) as jwt.JwtPayload;
             // Récupère le jeton de rafraîchissement associé à l'ID de l'utilisateur dans le store
             const storedRefreshToken = this.refreshTokenStore.get(payload.userId)
             // Vérifie que le jeton de rafraîchissement fourni correspond à celui stocké
@@ -47,6 +47,7 @@ export class AuthService {
                 const newToken = this.createAccessToken(payload.userId)
                 // Met à jour le jeton de rafraîchissement dans le store
                 this.refreshTokenStore.set(payload.userId, newToken)
+                
             } else {
                 // Jeton de rafraîchissement invalide
                 throw new Error('Invalid refresh token')

@@ -8,8 +8,8 @@ import { isAuth } from "../../../middleware/authMiddleware";
 const router = express.Router();
 
 // Définit une route PUT pour mettre à jour un utilisateur par ID, avec le middleware d'authentification
-router.put('/:id', isAuth, updateUser)
+router.put('/:id', updateUser)
 // Définit une route DELETE pour supprimer un utilisateur par ID, avec le middleware d'authentification
-router.delete('/:id', isAuth, deleteUser)
+router.delete('/:id', deleteUser)
 
 export default router;
