@@ -36,8 +36,15 @@ export class MangaService {
      * @returns Le manga correspondant à l'identifiant ou undefined s'il n'existe pas
      */
     getMangaById(id: string): Manga | undefined {
+            const author = this.mangaAuthorRepository.getAuthorByMangaId(id)
+            const manga = this.mangasRepository.getMangaById(id)
+            // Vérifie si les identifiants du manga et de l'auteur sont définis
+            if (author && manga) {
+                // Récupère l'auteur du manga en fonction de son identifiant
+                manga.author = this.mangaAuthorRepository.getAuthorByMangaId(id) || []
+            }
         return this.mangasRepository.getMangaById(id)
-    }
+        }
 
     /**
      * Ajoute un nouveau manga
