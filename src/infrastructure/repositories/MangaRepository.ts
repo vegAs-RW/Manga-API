@@ -46,8 +46,8 @@ export class MangasRepository {
      * Ajoute un nouveau manga.
      * @param manga - Le manga à ajouter.
      */
-    addNewManga(manga: Manga[]) {
-        const data = JSON.stringify(manga)
+    addNewManga(mangas: Manga[]) {
+        const data = JSON.stringify(mangas)
         fs.writeFileSync(this.filePath, data)
     }
 }

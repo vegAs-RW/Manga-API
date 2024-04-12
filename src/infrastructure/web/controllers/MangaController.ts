@@ -47,3 +47,19 @@ export const getMangaById = (req: Request, res: Response) => {
         })
     }
 }
+
+export const addNewManga = (req:Request, res: Response) =>{
+    try {
+        const mangaData = req.body
+        mangaService.addManga(mangaData)
+        APIResponse(res, {
+            statusCode: 200,
+            message: 'Manga added successfully',
+        })
+    } catch (error){
+        APIResponse(res, {
+            statusCode: 500,
+            message: 'Internal Server Error',
+        })
+    }
+}
