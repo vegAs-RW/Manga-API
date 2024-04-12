@@ -11,7 +11,7 @@ const { NODE_ENV } = env
 
 // Instanciation des services
 const userService = new UserService();
-const authService = new AuthService()
+export const authService = new AuthService()
 
 /**
  * Fonction pour récupérer un utilisateur par son nom d'utilisateur.

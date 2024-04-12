@@ -14,6 +14,7 @@ const authService = new AuthService()
 export const refreshTokenMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     // Récupère le jeton de rafraîchissement (refresh token) à partir des cookies de la requête
     const {refreshToken} = req.cookies;
+    
     // Vérifie si le jeton de rafraîchissement existe
     if(!refreshToken) return next()
 
