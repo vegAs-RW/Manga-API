@@ -12,7 +12,7 @@ import env from './config/env'
 // Importe les middlewares personnalisés
 import { requestLogger } from './middleware/logger';
 import { RandomNinjaMW } from './middleware/randomNinja';
-import { isAuth } from './middleware/authMiddleware';
+import { refreshTokenMiddleware } from './middleware/refreshToken';
 
 // Crée une instance de l'application Express
 const app = express();
@@ -30,7 +30,6 @@ app.use(helmet());
 app.use(cookieParser());
 // Middleware pour enregistrer les requêtes dans la console
 app.use(requestLogger);
-
 // Route pour afficher un message avec le nom d'un ninja aléatoire à chaque requête sur la racine de l'API
 app.get("/", RandomNinjaMW, (req: Request, res: Response) => {
     const randomNinja = req.cookies.Ninja;
