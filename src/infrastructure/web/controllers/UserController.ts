@@ -5,6 +5,7 @@ import { APIResponse } from '../../../utils/APIresponse';
 import { User } from "../../../domain/entities/User";
 import env from '../../../config/env'
 import bcrypt from 'bcrypt'
+import { CustomRequest } from "../../../types/custom";
 
 
 const { NODE_ENV } = env
@@ -22,7 +23,7 @@ export const getUserByUsername = (req: Request, res: Response) => {
     // Récupère le nom d'utilisateur à partir du corps de la requête
     const { username } = req.body
      // Appelle la méthode getUserByUsername de UserService pour récupérer l'utilisateur par son nom d'utilisateur
-    const user = userService.getUserByUsername(username);
+    const user = userService.getUserByUsername(username, {id: true, username: true});
     // Si l'utilisateur est trouvé, envoie une réponse avec le statut 200 et les données de l'utilisateur
     if (user) {
         APIResponse(res, {
@@ -87,20 +88,20 @@ export const login = async (req: Request, res: Response) => {
         // Récupère le nom d'utilisateur et le mot de passe à partir du corps de la requête
         const { username, password } = req.body;
         // Récupère l'utilisateur par son nom d'utilisateur
-        const user = userService.getUserByUsername(username)
+        const user = await userService.getUserByUsername(username, { id: true, username: true, password: true })
         // Si l'utilisateur n'existe pas ou s'il manque le nom d'utilisateur, envoie une réponse avec le statut 400
-        if (!user || !user.username) {
+        if (!user) {
             return res.status(400).json({ message: 'Invalid request: username is missing' });
         }
         // Vérifie si le mot de passe est valide en le comparant avec le mot de passe haché de l'utilisateu
-        const isValid = await bcrypt.compare(password, user.password);
+        const isValid = await bcrypt.compare(password, user.password as string);
         // Si le mot de passe n'est pas valide, envoie une réponse avec le statut 401
         if (!isValid) {
             return APIResponse(res, { statusCode: 401, message: 'Auth failed' })
         }
         // Crée un jeton d'accès et un jeton de rafraîchissement
         const accessToken = authService.createAccessToken(user.id as string)
-        const refreshToken = authService.createRefreshToken(user.id as string)
+        const refreshToken = await authService.createRefreshToken(user.id as string)
         // Définit les cookies pour le jeton de rafraîchissement et le jeton d'accès
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
@@ -142,7 +143,7 @@ export const register = async (req: Request, res: Response) => {
             })
         }
         // Vérifie si le nom d'utilisateur existe déjà
-        const existingUsername = userService.getUserByUsername(username)
+        const existingUsername = await userService.getUserByUsername(username, { username: true })
         // Si le nom d'utilisateur existe déjà, envoie une réponse avec le statut 409
         if (existingUsername) return APIResponse(res, { statusCode: 409, message: 'user already exist' })
         // Hache le mot de passe
@@ -154,5 +155,26 @@ export const register = async (req: Request, res: Response) => {
     } catch (err) {
         // En cas d'erreur, envoie une réponse avec le statut 500
         APIResponse(res, { statusCode: 500, message: 'Inernal server Error' })
+    }
+}
+
+export const logout = async (req: Request, res: Response) => {
+    try {
+        res.clearCookie('accessToken');
+        res.clearCookie('refreshToken');
+        APIResponse(res, { statusCode: 200, message: 'Logout successful' });
+    } catch(error) {
+        console.error(error);
+        APIResponse(res, {statusCode: 500, message: 'Internal server error'})
+    }
+}
+
+export const me = async (req: CustomRequest, res: Response) => {
+    try {
+        // On récupère l'utilisateur stocké dans le token
+        APIResponse(res, { statusCode: 200, message: 'OK', data: req.user });
+    } catch(error) {
+        console.error(error);
+        APIResponse(res, {statusCode: 500, message: 'Internal server error'})
     }
 }

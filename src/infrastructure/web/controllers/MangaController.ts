@@ -49,12 +49,47 @@ export const getMangaById = (req: Request, res: Response) => {
 }
 
 export const addNewManga = (req:Request, res: Response) =>{
+    const {title, description, author, releaseDate, category} = req.body
     try {
-        const mangaData = req.body
-        mangaService.addManga(mangaData)
+        const newManga = {title, description, author, releaseDate, category}
+        mangaService.addManga(newManga)
         APIResponse(res, {
             statusCode: 200,
             message: 'Manga added successfully',
+        })
+    } catch (error){
+        APIResponse(res, {
+            statusCode: 500,
+            message: 'Internal Server Error',
+        })
+    }
+}
+
+export const deleteManga = (req:Request, res: Response) =>{
+    try {
+        const mangaId = req.params.id;
+        mangaService.deleteManga(mangaId)
+        APIResponse(res, {
+            statusCode: 200,
+            message: 'Manga deleted successfully',
+        })
+    } catch (error){
+        APIResponse(res, {
+            statusCode: 500,
+            message: 'Internal Server Error',
+        })
+    }
+}
+
+export const updateManga = (req:Request, res: Response) =>{
+    const {title, description, author, releaseDate, category} = req.body
+    try {
+        const mangaId = req.params.id;
+        const updatedManga = {id: mangaId, title, description, author, releaseDate, category}
+        mangaService.updateManga(updatedManga)
+        APIResponse(res, {
+            statusCode: 200,
+            message: 'Manga updated successfully',
         })
     } catch (error){
         APIResponse(res, {
