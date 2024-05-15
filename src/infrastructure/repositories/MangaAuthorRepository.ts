@@ -27,6 +27,21 @@ export class MangaAuthorRepository {
         }
     }
 
+    getAuthorById(id: string) {
+        try {
+            return db.select({
+                id: authors.id,
+                fullName: authors.fullName,
+                description: authors.description,
+                birthdate: authors.birthdate
+            }).from(authors)
+            .where(eq(authors.id, id))
+       } catch (err) {
+            console.log(err)
+            throw new Error('Impossible de récupérer l\'auteur')
+       }
+    }
+
     
     /**
      * Enregistre les auteurs de manga dans le fichier JSON

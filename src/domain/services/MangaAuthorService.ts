@@ -15,6 +15,10 @@ export class AuthorService {
         return this.authorRepository.getAllAuthors();
     }
 
+    getAuthorById(id: string) {
+        return this.authorRepository.getAuthorById(id)
+    }
+
     createAuthor(author: NewAuthor) {
         if (author?.fullName?.trim().length < 1 || author?.description?.trim().length < 1) return;
         return this.authorRepository.saveAuthor(author)
