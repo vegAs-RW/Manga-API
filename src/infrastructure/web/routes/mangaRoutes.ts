@@ -1,8 +1,6 @@
 import express  from "express";
 // Importe les fonctions de contrôleur pour récupérer tous les mangas et un manga par ID
-import { getAllMangas, getMangaById, addNewManga } from "../controllers/MangaController";
-// Importe le middleware d'authentification
-import { isAuth } from "../../../middleware/authMiddleware";
+import { getAllMangas, getMangaById, addNewManga, updateManga, deleteManga } from "../controllers/MangaController";
 // Crée un routeur Express
 const router = express.Router();
 
@@ -12,5 +10,9 @@ router.get('/', getAllMangas)
 router.get('/:id', getMangaById)
 
 router.post('/', addNewManga)
+
+router.put('/:id', updateManga)
+
+router.delete('/:id', deleteManga)
 
 export default router

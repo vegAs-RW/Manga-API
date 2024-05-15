@@ -1,5 +1,6 @@
 import express from 'express';
-import { login, register } from '../controllers/UserController';
+import { login, logout, me, register } from '../controllers/UserController';
+import { isAuth } from '../../../middleware/authMiddleware';
 
 // Crée un routeur Express
 const router = express.Router()
@@ -8,6 +9,10 @@ const router = express.Router()
 router.post('/login', login)
 // Définit la route pour l'enregistrement des utilisateurs
 router.post('/register', register)
+
+router.get('/me', isAuth, me)
+
+router.get('/logout', isAuth, logout)
 
 // Exporte le routeur pour une utilisation dans d'autres fichiers
 export default router
