@@ -1,1 +1,26 @@
-[]
+[
+    {
+    "id": 1,
+    "name": "Eiichiro Oda",
+    "description": "né le 1ᵉʳ janvier 1975 à Kumamoto dans la préfecture de Kumamoto, au Japon, est un mangaka.",
+    "mangaId": "1"
+    },
+    {
+        "id": 2,
+        "name": "Masashi Kishimoto",
+        "description": "né le 1ᵉʳ janvier 1975 à Kumamoto dans la préfecture de Kumamoto, au Japon, est un mangaka.",
+        "mangaId": "2"
+    },
+    {
+        "id": 3,
+        "name": "Hajime Isayama",
+        "description": "né le 1ᵉʳ janvier 1975 à Kumamoto dans la préfecture de Kumamoto, au Japon, est un mangaka.",
+        "mangaId": "3"
+    },
+    {
+        "id": 4,
+        "name": "Torù Fujisawa",
+        "description": "né le 1ᵉʳ janvier 1975 à Kumamoto dans la préfecture de Kumamoto, au Japon, est un mangaka.",
+        "mangaId": "4"
+    }
+]

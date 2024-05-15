@@ -23,5 +23,25 @@
     "username": "Kévin123",
     "password": "$2b$12$Zwx9kN3GS1V95U.KMEALRO..zPFGvsna4W2/.3edXXZgZHlza3g5W",
     "id": "1258a4f6-b387-4bf3-a21f-9a1452dba4f3"
+  },
+  {
+    "username": "Jean",
+    "password": "$2b$12$V1eGALTQGWCvrW54poWUGe5wPRIzq.UkITIR0odpttNssKIDKqHnW",
+    "id": "f7478f62-b537-499f-b536-dd315e9beb6e"
+  },
+  {
+    "username": "Jean2",
+    "password": "$2b$12$cGAKR/HnE.BErZnUZcAzFeJ6eB3XIz/cubMqMjVejNZfnXMjiKlGW",
+    "id": "c6e7225c-7347-454a-9862-0abba66106f2"
+  },
+  {
+    "username": "Michel",
+    "password": "$2b$12$hHqCSCFp/gG46VEUga/u.OaVCC5wHoA9QeufRaiAdox05RL1/2yAC",
+    "id": "1272ceb3-66d4-4cb9-b2ba-3ea87205f86c"
+  },
+  {
+    "username": "Henri",
+    "password": "$2b$12$JzXEud9QRKaY4c1r8FR7nuhM9V5NZFP.//aRJpdLKXCi2LTTMUqZW",
+    "id": "a74dd8f6-55bd-4c76-a5fe-c2d97e1bcded"
   }
 ]
