@@ -1,8 +1,6 @@
 import {db} from '../data';
 import { NewManga, Manga, MangaColumns } from '../../domain/entities/Manga';
-import fs from 'fs';
 import { mangas, authors, comments, categories } from '../data/schema';
-import { title } from 'process';
 import { eq } from 'drizzle-orm';
 
 
@@ -80,13 +78,13 @@ export class MangasRepository {
                 }
             }).from(mangas)
             .leftJoin(
-                authors, eq(mangas.id, authors.id) 
+                authors, eq(mangas.author, authors.id) 
             )
             .leftJoin(
                 categories, eq(mangas.category, categories.id)
             )
             .leftJoin(
-                comments, eq(mangas.id, comments.id)
+                comments, eq(mangas.id, comments.id) // attention ici
             ).where(eq(mangas.id, id))
        } catch (err) {
             console.log(err)
@@ -99,11 +97,10 @@ export class MangasRepository {
      * @param title - Le titre du manga à récupérer.
      * @returns Le manga correspondant au titre spécifié, ou undefined s'il n'existe pas.
      */
-    getMangaByTitle(title: string, columns: MangaColumns): Promise<Partial<Manga | undefined>> {
+    getMangaByTitle(title: string): Promise<Partial<Manga | undefined>> {
         try {
             return db.query.mangas.findFirst({
                 where:eq(mangas.title, title),
-                columns
             })
            } catch(err) {
             console.log(err)

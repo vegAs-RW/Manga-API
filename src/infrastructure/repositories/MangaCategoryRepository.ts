@@ -52,7 +52,7 @@ export class CategoryRepository {
      * Modifie une catégorie.
      * @param category - La catégorie à modifier.
      */
-    updateAuthor(category: Category) {
+    updateCategory(category: Category) {
         try {
             db.update(categories)
             .set(category)
