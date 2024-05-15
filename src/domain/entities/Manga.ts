@@ -1,11 +1,6 @@
-import { MangaAuthor } from "./MangaAuthor";
+import { InferInsertModel, InferSelectModel } from "drizzle-orm";
+import { mangas } from "../../infrastructure/data/schema";
 
-export interface Manga {
-    id?: string;
-    title: string;
-    genre: string[];
-    status: string;
-    chapters?: number;
-    description: string;
-    author?: MangaAuthor[];
-}
+export type Manga = InferSelectModel<typeof mangas>;
+export type NewManga = InferInsertModel<typeof mangas>
+export type MangaColumns = {[K in keyof Manga]?:boolean}
