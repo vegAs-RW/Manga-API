@@ -1,36 +1,55 @@
-import { Manga } from "../../domain/entities/Manga";
+import {db} from '../data';
+import { NewManga, Manga, MangaColumns } from '../../domain/entities/Manga';
 import fs from 'fs';
-import path from 'path';
+import { mangas, authors, comments, categories } from '../data/schema';
+import { title } from 'process';
+import { eq } from 'drizzle-orm';
+
 
 /**
  * Repository qui gère le CRUD des mangas
  */
 export class MangasRepository {
-    private mangas: Manga[] = [];
-    // Chemin du fichier JSON contenant les données des mangas
-    private filePath = path.join(__dirname, '..', 'data', 'manga.json');
-
-    // Charge les données des mangas lors de l'instanciation de la classe
-    constructor() {
-        this.mangas = this.loadMangas();
-    }
-
-     /**
-     * Charge les données des mangas à partir du fichier JSON.
-     * @returns Un tableau contenant les données des mangas.
-     */
-    loadMangas(): Manga[] {
-        const data = fs.readFileSync(this.filePath, 'utf-8')
-        return JSON.parse(data);
-    }
 
     /**
      * Récupère tous les mangas.
      * @returns Un tableau contenant tous les mangas.
      */
-    getAllMangas(): Manga[] {
-        const data = fs.readFileSync(this.filePath, 'utf-8');
-        return JSON.parse(data);
+    getAllMangas(): Promise< any > {
+       try {
+            return db.select({
+                id: mangas.id,
+                title: mangas.title,
+                description: mangas.description,
+                author: {
+                    id: authors.id,
+                    fullName: authors.fullName,
+                    birthdate: authors.birthdate
+                },
+                releaseDate: mangas.releaseDate,
+                category: {
+                    id: categories.id,
+                    name: categories.name
+                },
+                comments: {
+                    id: comments.id,
+                    content: comments.content,
+                    date: comments.date
+                }
+            }).from(mangas)
+            .leftJoin(
+                authors, eq(mangas.id, authors.id) 
+            )
+            .leftJoin(
+                categories, eq(mangas.category, categories.id)
+            )
+            .leftJoin(
+                comments, eq(mangas.id, comments.id)
+            ).execute()
+       } catch (err) {
+            console.log(err)
+            throw new Error('Impossible de récupérer les mangas')
+       }
     }
 
     /**
@@ -38,16 +57,100 @@ export class MangasRepository {
      * @param id - L'identifiant du manga à récupérer.
      * @returns Le manga correspondant à l'identifiant spécifié, ou undefined s'il n'existe pas.
      */
-    getMangaById(id: string) {
-        return this.mangas.find(manga => manga.id === id)
+    getMangaById(id: string): Promise<any> {
+        try {
+            return db.select({
+                id: mangas.id,
+                title: mangas.title,
+                description: mangas.description,
+                author: {
+                    id: authors.id,
+                    fullName: authors.fullName,
+                    birthdate: authors.birthdate
+                },
+                releaseDate: mangas.releaseDate,
+                category: {
+                    id: categories.id,
+                    name: categories.name
+                },
+                comments: {
+                    id: comments.id,
+                    content: comments.content,
+                    date: comments.date
+                }
+            }).from(mangas)
+            .leftJoin(
+                authors, eq(mangas.id, authors.id) 
+            )
+            .leftJoin(
+                categories, eq(mangas.category, categories.id)
+            )
+            .leftJoin(
+                comments, eq(mangas.id, comments.id)
+            ).where(eq(mangas.id, id))
+       } catch (err) {
+            console.log(err)
+            throw new Error('Impossible de récupérer le manga')
+       }
     } 
+
+    /**
+     * Récupère un manga par son titre.
+     * @param title - Le titre du manga à récupérer.
+     * @returns Le manga correspondant au titre spécifié, ou undefined s'il n'existe pas.
+     */
+    getMangaByTitle(title: string, columns: MangaColumns): Promise<Partial<Manga | undefined>> {
+        try {
+            return db.query.mangas.findFirst({
+                where:eq(mangas.title, title),
+                columns
+            })
+           } catch(err) {
+            console.log(err)
+            throw new Error('Impossible de récupérer le manga')
+           } 
+    }
 
     /**
      * Ajoute un nouveau manga.
      * @param manga - Le manga à ajouter.
      */
-    addNewManga(mangas: Manga[]) {
-        const data = JSON.stringify(mangas)
-        fs.writeFileSync(this.filePath, data)
+    addNewManga(manga: NewManga) {
+        try {
+            return db.insert(mangas).values(manga).returning({id: mangas.id}).execute()
+           } catch(err) {
+            console.error(err)
+            throw new Error('Impossible d\'ajouter le manga')
+           }
+    }
+
+    /**
+     * Modifie un manga.
+     * @param manga - Le manga à modifier.
+     */
+    updateManga(manga: Manga) {
+        try {
+            return db.update(mangas)
+            .set(manga)
+            .where(
+                eq(mangas.id, manga.id))
+            .execute();
+           } catch (err) {
+            console.error(err)
+            throw new Error("Impossible de mettre à jour la fiche du manga")
+           }
+    }
+
+    /**
+     * Supprime manga.
+     * @param id -  L'identifiant du manga à supprimer.
+     */
+    deleteManga(id: string) {
+        try {
+            return db.delete(mangas).where(eq(mangas.id, id)).execute()
+        } catch (err){
+            console.error(err)
+            throw new Error('Suppression impossible')
+        }
     }
 }
