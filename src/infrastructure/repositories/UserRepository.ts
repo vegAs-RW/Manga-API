@@ -1,4 +1,7 @@
-import { User } from '../../domain/entities/User';
+import {db} from '../data'
+import { users } from '../data/schema';
+import { User, NewUser, UserColumns } from '../../domain/entities/User';
+import { eq } from 'drizzle-orm';
 import fs from 'fs';
 import path from 'path';
 
@@ -13,9 +16,18 @@ export class UserRepository {
      * Récupère tous les utilisateurs à partir du fichier JSON.
      * @returns Un tableau contenant tous les utilisateurs.
      */
-    getAllUsers(): User[] {
-        const data = fs.readFileSync(this.filePath, 'utf-8');
-        return JSON.parse(data);
+    getAllUsers():Promise<Partial<User>[]> {
+        try {
+            return db.query.users.findMany({
+                columns: {
+                    id: true,
+                    username: true
+                }
+            })
+        } catch (err) {
+            console.log(err);
+            throw new Error('Récupération des utilisateurs impossible')
+        }
     }
 
     /**
@@ -23,52 +35,76 @@ export class UserRepository {
      * @param username - Le nom d'utilisateur de l'utilisateur à récupérer.
      * @returns L'utilisateur correspondant au nom d'utilisateur spécifié, ou undefined s'il n'existe pas.
      */
-    getUserByUsername(username: string): User | undefined {
-        const users = this.getAllUsers();
-        return users.find(user => user.username === username);
+    getUserByUsername(username: string, columns: UserColumns): Promise<Partial<User | undefined>> {
+        try {
+            return db.query.users.findFirst({
+                where: eq(users.username, username),
+                columns
+            })
+        } catch (err) {
+            console.log(err)
+            throw new Error ('Impossible de récupérer l\'utilisateur')
+        }
     }
+
+    /**
+     * Récupère un utilisateur par son id.
+     * @param id - L'id de l'utilisateur à récupérer.
+     * @returns L'utilisateur correspondant à l'id d'utilisateur spécifié, ou undefined s'il n'existe pas.
+     */
+    getUserById(id: string, columns: UserColumns): Promise<Partial<User | undefined>> {
+        try {
+         return db.query.users.findFirst({
+             where: eq(users.id, id),
+             columns
+         })
+        } catch (err) {
+         console.error(err)
+         throw new Error('Impossible de récupérer l\'utilisateur')
+        }
+     }
 
     /**
      * Ajoute un nouvel utilisateur.
      * @param user - L'utilisateur à ajouter.
      */
-    addUser(user: User) {
-        const users = this.getAllUsers();
-        users.push({
-            ...user,
-            id: crypto.randomUUID()
-        })
-        this.saveUsers(users);
+    createUser(user: NewUser) {
+        try {
+            return db.insert(users).values(user).execute();
+           } catch (err) {
+            console.error(err)
+            throw new Error("Création de l\'utilisateur impossible")
+           }
     }
 
     /**
      * Met à jour un utilisateur existant.
-     * @param updatedUser - L'utilisateur mis à jour.
+     * @param user - L'utilisateur mis à jour.
      */
-    updateUser(updatedUser: User): void {
-        const users = this.getAllUsers();
-        const index = users.findIndex(user => user.id === updatedUser.id);
-        if (index !== -1) {
-            users[index] = updatedUser;
-            this.saveUsers(users);
-        }
+    updateUser(user: User) {
+        try {
+            return db.update(users)
+            .set(user)
+            .where(
+                eq(users.id, user.id))
+            .execute();
+           } catch (err) {
+            console.error(err)
+            throw new Error("Impossible de mettre à jour l\'utilisateur")
+           }
     }
 
     /**
      * Supprime un utilisateur par son ID.
      * @param id - L'identifiant de l'utilisateur à supprimer.
      */
-    deleteUser(id: string): void {
-        const users = this.getAllUsers().filter(user => user.id !== id);
-        this.saveUsers(users);
+    deleteUser(id: string) {
+       try {
+        return db.delete(users).where(eq(users.id, id)).execute()
+       } catch (err) {
+        console.log(err)
+        throw new Error('Suppression de l\'utilisateur impossible')
+       }
     }
 
-    /**
-     * Enregistre les utilisateurs dans le fichier JSON.
-     * @param users - Le tableau des utilisateurs à enregistrer.
-     */
-    private saveUsers(users: User[]): void {
-        const data = JSON.stringify(users, null, 2);
-        fs.writeFileSync(this.filePath, data);
-    }
 }
