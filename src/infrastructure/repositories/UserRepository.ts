@@ -2,16 +2,11 @@ import {db} from '../data'
 import { users } from '../data/schema';
 import { User, NewUser, UserColumns } from '../../domain/entities/User';
 import { eq } from 'drizzle-orm';
-import fs from 'fs';
-import path from 'path';
 
 /**
  * Classe représentant un repository pour gérer les opérations CRUD sur les utilisateurs.
  */
 export class UserRepository {
-    /** Chemin du fichier JSON contenant les données des utilisateurs */
-    private filePath = path.join(__dirname, '..', 'data', 'users.json');
-
     /**
      * Récupère tous les utilisateurs à partir du fichier JSON.
      * @returns Un tableau contenant tous les utilisateurs.
