@@ -13,7 +13,7 @@ export class UserService {
      * @returns Un tableau contenant tous les utilisateurs
      */
     getAllUsers() {
-        return this.userRepository.getAllUsers;
+        return this.userRepository.getAllUsers();
     }
 
     /**
@@ -22,8 +22,8 @@ export class UserService {
      * @param columns Les informations de l'utilisateur
      * @returns L'utilisateur correspondant au nom d'utilisateur ou undefined s'il n'existe pas
      */
-    getUserById(id: string, columns: UserColumns) {
-        return this.userRepository.getUserById(id, columns)
+    getUserById(id: string) {
+        return this.userRepository.getUserById(id, {id:true, username: true, refreshToken: true})
     }
     
     /**
@@ -31,8 +31,8 @@ export class UserService {
      * @param username Le nom d'utilisateur de l'utilisateur à récupérer
      * @returns L'utilisateur correspondant au nom d'utilisateur ou undefined s'il n'existe pas
      */
-    getUserByUsername(username: string, columns: UserColumns) {
-        return this.userRepository.getUserByUsername(username, columns)
+    getUserByUsername(username: string) {
+        return this.userRepository.getUserByUsername(username, {id: true, username: true})
     }
 
     /**

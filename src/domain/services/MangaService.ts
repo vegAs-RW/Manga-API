@@ -1,15 +1,14 @@
 import { Manga, NewManga } from "../entities/Manga";
 import { MangasRepository } from "../../infrastructure/repositories/MangaRepository";
-import { MangaAuthorRepository } from "../../infrastructure/repositories/MangaAuthorRepository";
+
 
 export class MangaService {
     private mangasRepository: MangasRepository;
-    private mangaAuthorRepository: MangaAuthorRepository;
+    
 
     // Constructeur pour initialiser les repositories
     constructor() {
         this.mangasRepository = new MangasRepository();
-        this.mangaAuthorRepository = new MangaAuthorRepository();
     }
 
     /**
