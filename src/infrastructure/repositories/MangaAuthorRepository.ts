@@ -1,38 +1,72 @@
-import { MangaAuthor } from '../../domain/entities/MangaAuthor';
-import fs from 'fs';
-import path from 'path';
+import {db} from '../data'
+import { authors } from '../data/schema';
+import { eq } from 'drizzle-orm';
+import { Author, NewAuthor } from '../../domain/entities/MangaAuthor';
 
 /**
  * Repository qui gère le CRUD des auteurs
  */
 export class MangaAuthorRepository {
-    private filePath = path.join(__dirname, '..', 'data', 'auteur.json');
-
+   
     /**
      * Récupère tous les auteurs du fichier json
      * @returns {MangaAuthor[]} Un tableau contenant tous les auteurs de manga
      */
-    getAllAuthors(): MangaAuthor[] {
-        const data = fs.readFileSync(this.filePath, 'utf-8')
-        return JSON.parse(data)
+    getAllAuthors() {
+        try {
+            return db.select({
+                id: authors.id,
+                fullName: authors.id,
+                description: authors.description,
+                birthDate: authors.birthdate,
+            }).from(authors)
+            .execute()  
+        }catch (err) {
+            console.error(err)
+            throw new Error('Impossible de récupérer les auteurs')
+        }
     }
 
-    /**
-     * Récupère les auteurs d'un manga en fonction de l'identifiant du manga
-     * @param {string} mangaId L'identifiant du manga
-     * @return {MangaAuthor[]} Un tableau contenant les auteurs du manga donné
-     */
-    getAuthorByMangaId(mangaId: string): MangaAuthor[] {
-        const authors = this.getAllAuthors();
-        return authors.filter(author => author.mangaId === mangaId)
-    }
-
+    
     /**
      * Enregistre les auteurs de manga dans le fichier JSON
-     * @param {MangaAuthors[]} authors Les auteurs de manga à enregistrer
+     * @param {author} author L'auteur de manga à enregistrer
      */
-    saveAuthors(authors: MangaAuthor[]) {
-        const data = JSON.stringify(authors);
-        fs.writeFileSync(this.filePath, data)
+    saveAuthor(author: NewAuthor) {
+       try {
+        return db.insert(authors).values(author).execute()
+       } catch (err) {
+        console.log(err)
+        throw new Error('Impossible d\'ajouter un auteur')
+       }
+    }
+
+    /**
+     * Modifie un auteur.
+     * @param author - L'auteur à modifier.
+     */
+    updateAuthor(author: Author) {
+        try {
+            db.update(authors)
+            .set(author)
+            .where(eq(authors.id, author.id))
+            .execute();
+        } catch (err) {
+            console.log(err)
+            throw new Error('Impossible de modifier l\'auteur séléctionné')
+        }
+    }
+
+    /**
+     * Supprime l'auteur d'un manga dans la base de données
+     * @param id L'identifiant de l'auteur de manga à supprimer
+     */
+    deleteAuthor(id: string) {
+        try {
+            return db.delete(authors).where(eq(authors.id, id)).execute()
+        } catch (err) {
+            console.log(err)
+            throw new Error('Impossible de supprimer l\'auteur')
+        }
     }
 }
