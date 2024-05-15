@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { APIResponse } from "../../../utils/APIresponse";
-import { MangaAuthorRepository } from "../../repositories/MangaAuthorRepository";
 import { AuthorService } from "../../../domain/services/MangaAuthorService";
 const authorService = new AuthorService();
 
