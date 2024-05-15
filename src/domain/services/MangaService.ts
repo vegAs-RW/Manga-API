@@ -1,4 +1,4 @@
-import { Manga } from "../entities/Manga";
+import { Manga, NewManga } from "../entities/Manga";
 import { MangasRepository } from "../../infrastructure/repositories/MangaRepository";
 import { MangaAuthorRepository } from "../../infrastructure/repositories/MangaAuthorRepository";
 
@@ -14,20 +14,11 @@ export class MangaService {
 
     /**
      * Récupère tous les mangas avec leurs auteurs associés
-     * @returns Un tableau de mangas avec les auteurs
+     * @returns Un tableau de mangas
      */
-    getAllMangas(): Manga[] {
+    getAllMangas() {
         // Récupère tous les mangas depuis le repository
-        const mangas = this.mangasRepository.getAllMangas();
-        // Boucle à travers chaque manga pour récupérer son auteur
-        for (const manga of mangas) {
-            // Vérifie si l'identifiant du manga est défini
-            if (manga.id) {
-                // Récupère l'auteur du manga en fonction de son identifiant
-                manga.author = this.mangaAuthorRepository.getAuthorByMangaId(manga.id) || []
-            }
-        }
-        return mangas
+        return this.mangasRepository.getAllMangas();
     }
 
     /**
@@ -35,30 +26,45 @@ export class MangaService {
      * @param id L'identifiant du manga à récupérer
      * @returns Le manga correspondant à l'identifiant ou undefined s'il n'existe pas
      */
-    getMangaById(id: string): Manga | undefined {
-            const author = this.mangaAuthorRepository.getAuthorByMangaId(id)
-            const manga = this.mangasRepository.getMangaById(id)
-            // Vérifie si les identifiants du manga et de l'auteur sont définis
-            if (author && manga) {
-                // Récupère l'auteur du manga en fonction de son identifiant
-                manga.author = this.mangaAuthorRepository.getAuthorByMangaId(id) || []
-            }
+    getMangaById(id: string) {
+        if (!id || id.trim().length < 1) return;
         return this.mangasRepository.getMangaById(id)
         }
 
     /**
+     * Récupère un manga par son titre
+     * @param title Le titre du manga à récupérer
+     * @returns Le manga correspondant au titre ou undefined s'il n'existe pas
+     */
+    getMangaByTitle(title: string) {
+        if (!title || title.trim().length < 1) return;
+        return this.mangasRepository.getMangaByTitle(title)
+        }
+    
+    /**
      * Ajoute un nouveau manga
      * @param manga Le manga à ajouter
+     * @returns L'id du manga qui vient d'être créé
      */
-    addManga(manga: Manga) {
-        // Récupère tous les mangas existants
-        const mangas = this.mangasRepository.getAllMangas();
-        // Ajoute le nouveau manga avec son identifiant unique
-        mangas.push({
-            id: crypto.randomUUID(),
-            ...manga
-        })
-        // Sauvegarde les mangas mis à jour
-        this.mangasRepository.addNewManga(mangas);
+    async addManga(manga: NewManga) {
+        if (manga?.title?.trim().length < 1 || manga?.description?.trim().length < 1) return;
+        const newManga = await this.mangasRepository.addNewManga(manga)
+        return newManga[0].id
+    }
+
+    /**
+     * Modifie un manga existant
+     * @param manga Le manga à ajouter
+     */
+    updateManga(manga: Manga) {
+        return this.mangasRepository.updateManga(manga)
+    }
+
+    /**
+     * Supprime un manga existant
+     * @param id L'identifiant du manga à supprimer
+     */
+    deleteManga(id: string) {
+        return this.mangasRepository.deleteManga(id)
     }
 }
