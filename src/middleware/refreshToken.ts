@@ -20,11 +20,11 @@ export const refreshTokenMiddleware = async (req: Request, res: Response, next: 
 
     try {
         // Tente de rafraîchir le jeton d'accès à partir du jeton de rafraîchissement
-        const newAccessToken = authService.refreshAccessToken(refreshToken)
+        const newAccessToken = await authService.refreshAccessToken(refreshToken)
         // Si un nouveau jeton d'accès est généré avec succès
         if(newAccessToken) {
              // Définit le nouveau jeton d'accès dans le cookie 'accessToken' avec les options spécifiées
-            res.cookie('accesToken', newAccessToken, {
+            res.cookie('accessToken', newAccessToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production'
             })
@@ -32,6 +32,9 @@ export const refreshTokenMiddleware = async (req: Request, res: Response, next: 
         // Passe au middleware suivant ou au contrôleur suivant
         next();
     } catch (err) {
+        // En cas d'erreur, clear les cookies
+        res.clearCookie('accessToken');
+        res.clearCookie('refreshToken')
         // En cas d'erreur, affiche l'erreur dans la console et envoie une réponse d'erreur avec le statut 500
         console.error(err);
         return APIResponse(res, {statusCode:500, message: 'error'})
