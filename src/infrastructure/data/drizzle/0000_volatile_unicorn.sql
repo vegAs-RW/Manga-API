@@ -31,7 +31,8 @@ CREATE TABLE IF NOT EXISTS "mangas" (
 CREATE TABLE IF NOT EXISTS "users" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"username" varchar(100) NOT NULL,
-	"password" varchar(255) NOT NULL
+	"password" varchar(255) NOT NULL,
+	"refreshToken" varchar(255)
 );
 --> statement-breakpoint
 DO $$ BEGIN

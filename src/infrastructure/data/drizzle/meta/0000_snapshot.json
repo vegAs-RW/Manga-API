@@ -1,5 +1,5 @@
 {
-  "id": "3601a7c3-7463-4c87-b743-8a32f7bdd64b",
+  "id": "c7ce4f1f-66de-4456-bd97-5dc013988cb2",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "6",
   "dialect": "postgresql",
@@ -233,6 +233,12 @@
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
+        },
+        "refreshToken": {
+          "name": "refreshToken",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
