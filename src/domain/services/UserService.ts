@@ -31,8 +31,8 @@ export class UserService {
      * @param username Le nom d'utilisateur de l'utilisateur à récupérer
      * @returns L'utilisateur correspondant au nom d'utilisateur ou undefined s'il n'existe pas
      */
-    getUserByUsername(username: string) {
-        return this.userRepository.getUserByUsername(username, {id: true, username: true})
+    getUserByUsername(username: string, columns: UserColumns) {
+        return this.userRepository.getUserByUsername(username, {id: true, username: true, password:true})
     }
 
     /**
