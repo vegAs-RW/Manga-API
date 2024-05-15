@@ -7,7 +7,10 @@
     "watch": "tsc --watch",
     "dev": "concurrently \"tsc --watch\" \"tsnd --respawn src/app.ts\"",
     "doc": "typedoc",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watchAll"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watchAll",
+    "generate": "drizzle-kit generate pg --config=src/config/drizzle.config.ts",
+    "migrate": "tsx -r dotenv/config src/infrastructure/data/migrate.ts",
+    "studio": "drizzle-kit studio --config=src/config/drizzle.config.ts"
   },
   "keywords": [],
   "author": "",
