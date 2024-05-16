@@ -36,13 +36,13 @@ export class MangasRepository {
                 }
             }).from(mangas)
             .leftJoin(
-                authors, eq(mangas.id, authors.id) 
+                authors, eq(mangas.author, authors.id) 
             )
             .leftJoin(
                 categories, eq(mangas.category, categories.id)
             )
             .leftJoin(
-                comments, eq(mangas.id, comments.id)
+                comments, eq(mangas.id, comments.mangasId)
             ).execute()
        } catch (err) {
             console.log(err)
@@ -78,14 +78,15 @@ export class MangasRepository {
                 }
             }).from(mangas)
             .leftJoin(
-                authors, eq(mangas.author, authors.id) 
+                authors, eq(authors.id, mangas.author) 
             )
             .leftJoin(
                 categories, eq(mangas.category, categories.id)
             )
             .leftJoin(
-                comments, eq(mangas.id, comments.id) // attention ici
+                comments, eq(mangas.id, comments.mangasId) // attention ici
             ).where(eq(mangas.id, id))
+            .execute()
        } catch (err) {
             console.log(err)
             throw new Error('Impossible de récupérer le manga')

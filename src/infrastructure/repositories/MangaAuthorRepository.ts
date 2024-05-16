@@ -16,7 +16,7 @@ export class MangaAuthorRepository {
         try {
             return db.select({
                 id: authors.id,
-                fullName: authors.id,
+                fullName: authors.fullName,
                 description: authors.description,
                 birthDate: authors.birthdate,
             }).from(authors)
