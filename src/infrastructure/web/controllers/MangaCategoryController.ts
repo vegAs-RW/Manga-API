@@ -66,6 +66,11 @@ export const updateCategory = (req:Request, res: Response) =>{
     }
 }
 
+/**
+ * Afficher à l'écran les datas comments via une requete avec l'id d'un post
+ * @param req - requete http gérée via express
+ * @param res - réponse http gérée par express
+ */
 export const deleteCategory = (req: Request, res: Response) =>{
     try {
         const categoryId = req.params.id

@@ -18,7 +18,7 @@ export class MangaAuthorRepository {
                 id: authors.id,
                 fullName: authors.fullName,
                 description: authors.description,
-                birthDate: authors.birthdate,
+                birthdate: authors.birthdate,
             }).from(authors)
             .execute()  
         }catch (err) {
@@ -49,7 +49,7 @@ export class MangaAuthorRepository {
      */
     saveAuthor(author: NewAuthor) {
        try {
-        return db.insert(authors).values(author).execute()
+        return db.insert(authors).values(author).returning({id: authors.id}).execute()
        } catch (err) {
         console.log(err)
         throw new Error('Impossible d\'ajouter un auteur')

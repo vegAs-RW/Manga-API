@@ -20,6 +20,11 @@ export const getAllAuthors = async (req: Request, res: Response) => {
     }
 }
 
+/**
+ * Afficher à l'écran les datas comments via une requete avec l'id d'un post
+ * @param req - requete http gérée via express
+ * @param res - réponse http gérée par express
+ */
 export const getAuthorById = async (req: Request, res: Response) => {
     try {
         const authorId =req.params.id
@@ -63,12 +68,19 @@ export const addNewAuthor = async (req:Request, res: Response) =>{
  * @param req - requete http gérée via express
  * @param res - réponse http gérée par express
  */
-export const updateAuthor = (req:Request, res: Response) =>{
+export const updateAuthor = async (req:Request, res: Response) =>{
     const {fullName, description, birthdate} = req.body
     const authorId= req.params.id
     try {
+        if (!authorId) {
+            // Si l'identifiant de l'auteur est manquant, renvoyer une erreur 404
+            return APIResponse(res, {
+                statusCode: 404,
+                message: 'Author don\'t exist',
+            })
+        }
         const updatedAuthor = {id: authorId,fullName, description, birthdate}
-        authorService.updateAuthor(updatedAuthor)
+        await authorService.updateAuthor(updatedAuthor)
         APIResponse(res, {
             statusCode: 200,
             message: 'Author updated successfully',
@@ -81,6 +93,11 @@ export const updateAuthor = (req:Request, res: Response) =>{
     }
 }
 
+/**
+ * Afficher à l'écran les datas comments via une requete avec l'id d'un post
+ * @param req - requete http gérée via express
+ * @param res - réponse http gérée par express
+ */
 export const deleteAuthor = (req: Request, res: Response) =>{
     try {
         const authorId = req.params.id

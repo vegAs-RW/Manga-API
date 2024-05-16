@@ -48,6 +48,11 @@ export const getMangaById = async (req: Request, res: Response) => {
     }
 }
 
+/**
+ * Récupère un manga par son identifiant.
+ * @param req - L'objet Request d'Express.
+ * @param res - L'objet Response d'Express.
+ */
 export const addNewManga = (req:Request, res: Response) =>{
     const {title, description, author, releaseDate, category} = req.body
     try {
@@ -65,6 +70,11 @@ export const addNewManga = (req:Request, res: Response) =>{
     }
 }
 
+/**
+ * Récupère un manga par son identifiant.
+ * @param req - L'objet Request d'Express.
+ * @param res - L'objet Response d'Express.
+ */
 export const deleteManga = (req:Request, res: Response) =>{
     try {
         const mangaId = req.params.id;
@@ -81,12 +91,17 @@ export const deleteManga = (req:Request, res: Response) =>{
     }
 }
 
-export const updateManga = (req:Request, res: Response) =>{
+/**
+ * Récupère un manga par son identifiant.
+ * @param req - L'objet Request d'Express.
+ * @param res - L'objet Response d'Express.
+ */
+export const updateManga = async (req:Request, res: Response) =>{
     const {title, description, author, releaseDate, category} = req.body
     try {
         const mangaId = req.params.id;
         const updatedManga = {id: mangaId, title, description, author, releaseDate, category}
-        mangaService.updateManga(updatedManga)
+        await mangaService.updateManga(updatedManga)
         APIResponse(res, {
             statusCode: 200,
             message: 'Manga updated successfully',

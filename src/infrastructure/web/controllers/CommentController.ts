@@ -4,6 +4,11 @@ import { CommentService } from "../../../domain/services/CommentService";
 
 const commentService = new CommentService();
 
+/**
+ * Contrôleur pour la création d'un commentaire
+ * @param req Requête HTTP contenant les données du commentaire à créer
+ * @param res Réponse HTTP indiquant le résultat de l'opération
+ */
 export const createComment = async (req: Request, res: Response) => {
     try {
         const { mangasId } = req.params;
@@ -18,6 +23,11 @@ export const createComment = async (req: Request, res: Response) => {
     
 }
 
+/**
+ * Contrôleur pour la suppression d'un commentaire par son identifiant
+ * @param req Requête HTTP contenant l'identifiant du commentaire à supprimer
+ * @param res Réponse HTTP indiquant le résultat de l'opération
+ */
 export const deleteCommentById = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
@@ -29,6 +39,11 @@ export const deleteCommentById = async (req: Request, res: Response) => {
     }
 }
 
+/**
+ * Contrôleur pour la récupération des commentaires par l'identifiant du manga
+ * @param req Requête HTTP contenant l'identifiant du manga
+ * @param res Réponse HTTP contenant les commentaires du manga
+ */
 export const getCommentsByMangaId = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
