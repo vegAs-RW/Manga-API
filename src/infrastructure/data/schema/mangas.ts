@@ -1,4 +1,4 @@
-import { pgTable, uuid, varchar, text, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, uuid, varchar, text, timestamp, date} from "drizzle-orm/pg-core";
 import { authors, categories } from "./";
 
 
@@ -7,6 +7,6 @@ export const mangas = pgTable('mangas', {
     title: varchar('title', {length: 255}).notNull(),
     description: text('description').notNull(),
     author: uuid('author').references(() => authors.id).notNull(), // FK
-    releaseDate: timestamp('releaseDate').notNull(),
+    releaseDate: date('releaseDate').notNull(),
     category: uuid('category').references(() => categories.id).notNull() //FK
 })
