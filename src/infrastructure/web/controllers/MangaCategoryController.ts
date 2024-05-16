@@ -56,7 +56,7 @@ export const updateCategory = (req:Request, res: Response) =>{
         categoryService.updateCategory(updatedCategory)
         APIResponse(res, {
             statusCode: 200,
-            message: 'Author added successfully',
+            message: 'Category updated successfully',
         })
     } catch (error){
         APIResponse(res, {
@@ -72,7 +72,7 @@ export const deleteCategory = (req: Request, res: Response) =>{
         categoryService.deleteCategory(categoryId)
         APIResponse(res, {
             statusCode: 200,
-            message: 'Author deleted successfully',
+            message: 'Category deleted successfully',
         })
     } catch (err) {
         APIResponse(res, {

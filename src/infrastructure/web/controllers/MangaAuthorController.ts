@@ -71,7 +71,7 @@ export const updateAuthor = (req:Request, res: Response) =>{
         authorService.updateAuthor(updatedAuthor)
         APIResponse(res, {
             statusCode: 200,
-            message: 'Author added successfully',
+            message: 'Author updated successfully',
         })
     } catch (error){
         APIResponse(res, {

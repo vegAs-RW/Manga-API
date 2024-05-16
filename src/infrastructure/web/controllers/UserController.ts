@@ -45,11 +45,18 @@ export const getUserByUsername = (req: Request, res: Response) => {
  * @param req - La requête HTTP entrante.
  * @param res - La réponse HTTP à renvoyer.
  */
-export const updateUser = (req: Request, res: Response) => {
+export const updateUser = async (req: Request, res: Response) => {
     // Récupère l'identifiant de l'utilisateur à partir des paramètres de la requête
     const userId = req.params.id
     // Récupère les données mises à jour de l'utilisateur à partir du corps de la requête
-    const updatedUserData: User = req.body
+    let updatedUserData: User = req.body
+    // Vérifie si le mot de passe a été modifié
+    if (updatedUserData.password) {
+        // Hasher le nouveau mot de passe avec bcrypt
+        const hashedPassword = await bcrypt.hash(updatedUserData.password, 10);
+        // Mettre à jour le mot de passe dans les données utilisateur avec le mot de passe hashé
+        updatedUserData = { ...updatedUserData, password: hashedPassword };
+    }
     // Crée un nouvel objet utilisateur avec les données mises à jour et l'identifiant
     const updatedUser: User = { ...updatedUserData, id: userId }
     // Appelle la méthode updateUser de UserService pour mettre à jour l'utilisateur
@@ -72,6 +79,8 @@ export const deleteUser = (req: Request, res: Response) => {
     // Appelle la méthode deleteUser de UserService pour supprimer l'utilisateur
     userService.deleteUser(userId);
     // Envoie une réponse avec le statut 200 et un message de succès
+    res.clearCookie('accessToken');
+    res.clearCookie('refreshToken');
     APIResponse(res, {
         statusCode: 200,
         message: 'User successfully deleted'

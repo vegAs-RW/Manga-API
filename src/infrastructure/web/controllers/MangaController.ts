@@ -27,11 +27,11 @@ export const getAllMangas = async (req: Request, res: Response) => {
  * @param req - L'objet Request d'Express.
  * @param res - L'objet Response d'Express.
  */
-export const getMangaById = (req: Request, res: Response) => {
+export const getMangaById = async (req: Request, res: Response) => {
      // Récupère l'identifiant du manga à partir des paramètres de la requête
-    const mangaId = req.params.id;
+    const {id} = req.params;
     // Appelle la méthode getMangaById de MangaService pour récupérer le manga par son identifiant
-    const manga = mangaService.getMangaById(mangaId);
+    const manga = await mangaService.getMangaById(id);
     // Si le manga n'est pas trouvé, envoie une réponse avec le statut 404
     if (!manga) {
         APIResponse(res, {
@@ -43,7 +43,7 @@ export const getMangaById = (req: Request, res: Response) => {
         APIResponse(res, {
             statusCode: 200,
             message: 'Found !',
-            data: manga
+            data: manga[0]
         })
     }
 }

@@ -34,7 +34,8 @@ export const getCommentsByMangaId = async (req: Request, res: Response) => {
         const { id } = req.params;
         const comments = await commentService.getCommentById(id);
         console.table(comments)
-        APIResponse(res, { statusCode: 200, data: comments, message: 'OK' });
+        if (comments)
+            APIResponse(res, { statusCode: 200, data: comments, message: 'OK' });
     } catch (err) {
         APIResponse(res, { statusCode: 500, message: 'Internal server Error' });
     }
