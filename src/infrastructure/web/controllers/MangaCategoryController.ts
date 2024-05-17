@@ -27,15 +27,20 @@ export const getAllCategories = async (req: Request, res: Response) => {
  * @param res - réponse http gérée par express
  */
 export const addNewCategory = async (req:Request, res: Response) =>{
+    // Récupère les données de la nouvelle categorie depuis la requête
     const {name, description} = req.body
     try {
+        // Crée une nouvelle categorie avec les données spécifiées
         const category = {name, description}
+        // Appelle le service pour créer une nouvelle categorie
         await categoryService.createCategory(category)
+        // Envoie une réponse avec le statut 200
         APIResponse(res, {
             statusCode: 200,
             message: 'Category added successfully',
         })
     } catch (error){
+        // En cas d'erreur, envoie une réponse avec le statut 500
         APIResponse(res, {
             statusCode: 500,
             message: 'Internal Server Error',
@@ -49,16 +54,21 @@ export const addNewCategory = async (req:Request, res: Response) =>{
  * @param res - réponse http gérée par express
  */
 export const updateCategory = (req:Request, res: Response) =>{
+    // Récupère les données de la categorie mises à jour depuis la requête
     const {name, description} = req.body
     const categoryId= req.params.id
     try {
+        // Crée un objet contenant les données mises à jour de la categorie
         const updatedCategory = {id: categoryId, name, description}
+        // Appelle le service pour mettre à jour la categorie
         categoryService.updateCategory(updatedCategory)
+        // Envoie une réponse avec le statut 200
         APIResponse(res, {
             statusCode: 200,
             message: 'Category updated successfully',
         })
     } catch (error){
+        // En cas d'erreur, envoie une réponse avec le statut 500
         APIResponse(res, {
             statusCode: 500,
             message: 'Internal Server Error',
@@ -73,13 +83,17 @@ export const updateCategory = (req:Request, res: Response) =>{
  */
 export const deleteCategory = (req: Request, res: Response) =>{
     try {
+        // Récupère l'identifiant de la categorie depuis la requête
         const categoryId = req.params.id
+        // Appelle le service pour supprimer la categorie
         categoryService.deleteCategory(categoryId)
+        // Envoie une réponse avec le statut 200
         APIResponse(res, {
             statusCode: 200,
             message: 'Category deleted successfully',
         })
     } catch (err) {
+        // En cas d'erreur, envoie une réponse avec le statut 500
         APIResponse(res, {
             statusCode: 500,
             message: 'Internal Server Error',

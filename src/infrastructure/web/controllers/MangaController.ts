@@ -49,20 +49,25 @@ export const getMangaById = async (req: Request, res: Response) => {
 }
 
 /**
- * Récupère un manga par son identifiant.
+ * Ajoute un nouveau manga
  * @param req - L'objet Request d'Express.
  * @param res - L'objet Response d'Express.
  */
 export const addNewManga = (req:Request, res: Response) =>{
+    // Récupère les données du nouveau manga depuis la requête
     const {title, description, author, releaseDate, category} = req.body
     try {
+        // Crée un nouveau manga avec les données spécifiées
         const newManga = {title, description, author, releaseDate, category}
+        // Appelle le service pour ajouter le manga
         mangaService.addManga(newManga)
+        // Envoie une réponse avec le statut 200
         APIResponse(res, {
             statusCode: 200,
             message: 'Manga added successfully',
         })
     } catch (error){
+        // En cas d'erreur, envoie une réponse avec le statut 500
         APIResponse(res, {
             statusCode: 500,
             message: 'Internal Server Error',
@@ -71,19 +76,23 @@ export const addNewManga = (req:Request, res: Response) =>{
 }
 
 /**
- * Récupère un manga par son identifiant.
+ * Supprime un manga par son identifiant.
  * @param req - L'objet Request d'Express.
  * @param res - L'objet Response d'Express.
  */
 export const deleteManga = (req:Request, res: Response) =>{
     try {
+        // Récupère l'identifiant du manga à supprimer depuis la requête
         const mangaId = req.params.id;
+        // Appelle le service pour supprimer le manga
         mangaService.deleteManga(mangaId)
+        // Envoie une réponse avec le statut 200
         APIResponse(res, {
             statusCode: 200,
             message: 'Manga deleted successfully',
         })
     } catch (error){
+        // En cas d'erreur, envoie une réponse avec le statut 500
         APIResponse(res, {
             statusCode: 500,
             message: 'Internal Server Error',
@@ -92,21 +101,27 @@ export const deleteManga = (req:Request, res: Response) =>{
 }
 
 /**
- * Récupère un manga par son identifiant.
+ * Met à jour un manga en utilisant son identifiant.
  * @param req - L'objet Request d'Express.
  * @param res - L'objet Response d'Express.
  */
 export const updateManga = async (req:Request, res: Response) =>{
+    // Récupère les données mises à jour du manga depuis la requête
     const {title, description, author, releaseDate, category} = req.body
     try {
+        // Récupère l'identifiant du manga à mettre à jour depuis la requête
         const mangaId = req.params.id;
+        // Crée un objet contenant les données mises à jour du manga
         const updatedManga = {id: mangaId, title, description, author, releaseDate, category}
+        // Appelle le service pour mettre à jour le manga
         await mangaService.updateManga(updatedManga)
+        // Envoie une réponse avec le statut 200
         APIResponse(res, {
             statusCode: 200,
             message: 'Manga updated successfully',
         })
     } catch (error){
+        // En cas d'erreur, envoie une réponse avec le statut 500
         APIResponse(res, {
             statusCode: 500,
             message: 'Internal Server Error',

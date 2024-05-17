@@ -9,8 +9,9 @@ import { Author, NewAuthor } from '../../domain/entities/MangaAuthor';
 export class MangaAuthorRepository {
    
     /**
-     * Récupère tous les auteurs du fichier json
-     * @returns {MangaAuthor[]} Un tableau contenant tous les auteurs de manga
+     * Récupère tous les auteurs de manga.
+     * @returns Un tableau contenant tous les auteurs de manga.
+     * @throws Une erreur si la récupération des auteurs échoue.
      */
     getAllAuthors() {
         try {
@@ -27,6 +28,12 @@ export class MangaAuthorRepository {
         }
     }
 
+    /**
+     * Récupère un auteur de manga par son identifiant.
+     * @param id L'identifiant de l'auteur à récupérer.
+     * @returns Les données de l'auteur correspondant à l'identifiant spécifié.
+     * @throws Une erreur si la récupération de l'auteur échoue.
+     */
     getAuthorById(id: string) {
         try {
             return db.select({
@@ -44,8 +51,10 @@ export class MangaAuthorRepository {
 
     
     /**
-     * Enregistre les auteurs de manga dans le fichier JSON
-     * @param {author} author L'auteur de manga à enregistrer
+     * Enregistre un nouvel auteur de manga.
+     * @param author Les données du nouvel auteur à enregistrer.
+     * @returns Les données de l'auteur ajouté.
+     * @throws Une erreur si l'ajout de l'auteur échoue.
      */
     saveAuthor(author: NewAuthor) {
        try {
@@ -57,8 +66,9 @@ export class MangaAuthorRepository {
     }
 
     /**
-     * Modifie un auteur.
-     * @param author - L'auteur à modifier.
+     * Modifie un auteur de manga existant.
+     * @param author Les données de l'auteur à modifier.
+     * @throws Une erreur si la modification de l'auteur échoue.
      */
     updateAuthor(author: Author) {
         try {
@@ -73,8 +83,9 @@ export class MangaAuthorRepository {
     }
 
     /**
-     * Supprime l'auteur d'un manga dans la base de données
-     * @param id L'identifiant de l'auteur de manga à supprimer
+     * Supprime un auteur de manga de la base de données.
+     * @param id L'identifiant de l'auteur de manga à supprimer.
+     * @throws Une erreur si la suppression de l'auteur échoue.
      */
     deleteAuthor(id: string) {
         try {

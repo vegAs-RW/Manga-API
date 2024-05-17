@@ -12,9 +12,9 @@ export function setupSocketEvent(io: Server) {
     io.on('connection', (socket) => {
     
         // Authentifie le socket pour obtenir l'identifiant de l'utilisateur
-        const userId = authenticateSocket(socket);
+        /*const userId = authenticateSocket(socket);
         if (!userId) return; // Si l'authentification échoue, termine la connexion
-
+        */
         console.log(`New connection, welcome ${socket.id} !`); // Affiche un message de bienvenue pour la nouvelle connexion
 
         // Écoute l'événement 'createRoom' pour la création d'un nouveau salon

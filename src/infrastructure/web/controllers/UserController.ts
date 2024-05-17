@@ -167,10 +167,19 @@ export const register = async (req: Request, res: Response) => {
     }
 }
 
+/**
+ * Déconnecte un utilisateur en supprimant les cookies d'accès et de rafraîchissement.
+ * Envoie une réponse avec le statut 200 si la déconnexion est réussie.
+ * En cas d'erreur, envoie une réponse avec le statut 500.
+ * @param req Requête HTTP
+ * @param res Réponse HTTP
+ */
 export const logout = async (req: Request, res: Response) => {
     try {
+        // Supprime les cookies d'accès et de rafraîchissement
         res.clearCookie('accessToken');
         res.clearCookie('refreshToken');
+        // Envoie une réponse avec le statut 200
         APIResponse(res, { statusCode: 200, message: 'Logout successful' });
     } catch(error) {
         console.error(error);
@@ -178,11 +187,19 @@ export const logout = async (req: Request, res: Response) => {
     }
 }
 
+/**
+ * Renvoie les informations de l'utilisateur connecté.
+ * Envoie une réponse avec le statut 200 et les données de l'utilisateur si la demande est réussie.
+ * En cas d'erreur, affiche l'erreur dans la console et envoie une réponse avec le statut 500.
+ * @param req Requête HTTP personnalisée contenant les informations de l'utilisateur
+ * @param res Réponse HTTP
+ */
 export const me = async (req: CustomRequest, res: Response) => {
     try {
-        // On récupère l'utilisateur stocké dans le token
+        // Renvoie les informations de l'utilisateur stockées dans le token
         APIResponse(res, { statusCode: 200, message: 'OK', data: req.user });
     } catch(error) {
+        // En cas d'erreur, affiche l'erreur dans la console et envoie une réponse avec le statut 500
         console.error(error);
         APIResponse(res, {statusCode: 500, message: 'Internal server error'})
     }
