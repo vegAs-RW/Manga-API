@@ -1,6 +1,6 @@
 import { Socket } from "socket.io";
 import { MessageService } from "../../../../domain/services/MessageService";
-import { ne } from "drizzle-orm";
+
 
 const messageService = new MessageService();
 

@@ -18,6 +18,7 @@ import cors from 'cors';
 import { requestLogger } from './middleware/logger';
 import { RandomNinjaMW } from './middleware/randomNinja';
 import { refreshTokenMiddleware } from './middleware/refreshToken';
+
 import { initSocketServer } from './infrastructure/web/sockets/server';
 
 // Crée une instance de l'application Express

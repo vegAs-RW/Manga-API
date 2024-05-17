@@ -53,14 +53,14 @@ export const getMangaById = async (req: Request, res: Response) => {
  * @param req - L'objet Request d'Express.
  * @param res - L'objet Response d'Express.
  */
-export const addNewManga = (req:Request, res: Response) =>{
+export const addNewManga = async (req:Request, res: Response) =>{
     // Récupère les données du nouveau manga depuis la requête
     const {title, description, author, releaseDate, category} = req.body
     try {
         // Crée un nouveau manga avec les données spécifiées
         const newManga = {title, description, author, releaseDate, category}
         // Appelle le service pour ajouter le manga
-        mangaService.addManga(newManga)
+        await mangaService.addManga(newManga)
         // Envoie une réponse avec le statut 200
         APIResponse(res, {
             statusCode: 200,
